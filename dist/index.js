@@ -951,6 +951,14 @@ const os = __webpack_require__(87);
 async function run() {
   try {
     if (os.platform() === 'linux') {
+      await exec('if ! command -v sudo >/dev/null; then echo "has_no_sudo" else echo "has_sudo" fi', {
+        listeners: {
+          stdout: (data) => {
+            console.log(data.toString());
+          }
+        }
+      })
+
       await exec('sudo', ['apt-get', 'update']);
       // For Chromium
       await exec('sudo', ['apt-get', 'install', 'libgbm-dev']);

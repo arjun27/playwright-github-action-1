@@ -12,6 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-node@v1
+      env:
+        RUNNER_TEMP: '/tmp/'
     - uses: ./
     - name: Run Playwright
       run: cd sample && npm install && node index.js
