@@ -951,15 +951,16 @@ const os = __webpack_require__(87);
 async function run() {
   try {
     if (os.platform() === 'linux') {
-      await exec('command', ['-v', 'sudo'], {
-        listeners: {
-          stdout: (data) => {
-            console.log(data.toString());
-          }
-        }
-      })
+      // await exec('command', ['-v', 'sudo'], {
+      //   listeners: {
+      //     stdout: (data) => {
+      //       console.log(data.toString());
+      //     }
+      //   }
+      // })
 
-      await exec('sudo', ['apt-get', 'update']);
+      // await exec('sudo', ['apt-get', 'update']);
+      await exec('apt-get', ['update']);
       // For Chromium
       await exec('sudo', ['apt-get', 'install', 'libgbm-dev']);
       // For WebKit
