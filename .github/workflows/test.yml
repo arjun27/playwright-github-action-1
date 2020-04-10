@@ -14,7 +14,7 @@ jobs:
     - uses: actions/setup-node@v1
       env:
         RUNNER_TEMP: '/tmp/'
-    - uses: ./
+    - uses: arjun27/playwright-github-action-1@1ecd8293b850d53d759a56ba887551f49e6b5964
     - name: Run Playwright
       run: cd sample && npm install && node index.js
 

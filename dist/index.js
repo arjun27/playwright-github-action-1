@@ -948,6 +948,27 @@ const core = __webpack_require__(470);
 const { exec } = __webpack_require__(986);
 const os = __webpack_require__(87);
 
+function isRunningAsRoot() {
+  return new Promise(async (resolve, reject) => {
+    await exec('id', ['-u'], {
+      listeners: {
+        stdout: (data) => {
+          const result = Number(data.toString());
+          console.log('------resutl', result);
+          resolve(result === 0);
+        }
+      }
+    })
+  })
+}
+
+const chromiumDependencies = ['libgbm-dev']
+const webkitDependencies = ['libwoff1', 'libopus0', 'libwebp6', 'libwebpdemux2',
+                            'libenchant1c2a', 'libgudev-1.0-0', 'libsecret-1-0',
+                            'libhyphen0', 'libgdk-pixbuf2.0-0', 'libegl1',
+                            'libgles2', 'libevent-2.1-6', 'libnotify4', 'libxslt1.1']
+const firefoxDependencies = ['ffmpeg']
+
 async function run() {
   try {
     if (os.platform() === 'linux') {
@@ -958,28 +979,37 @@ async function run() {
       //     }
       //   }
       // })
+      const isSudo = await isRunningAsRoot();
+      console.log('+++ result', isSudo);
+
+      if (isSudo) {
+        await exec('apt-get', ['update']);
+        await exec('apt-get', ['install', '-y', ...chromiumDependencies]);
+        await exec('apt-get', ['install', '-y', ...webkitDependencies]);
+        await exec('apt-get', ['install', '-y', ...firefoxDependencies])
+      }
 
       // await exec('sudo', ['apt-get', 'update']);
-      await exec('apt-get', ['update']);
-      // For Chromium
-      await exec('sudo', ['apt-get', 'install', 'libgbm-dev']);
-      // For WebKit
-      await exec('sudo', ['apt-get', 'install', 'libwoff1',
-                                                'libopus0',
-                                                'libwebp6',
-                                                'libwebpdemux2',
-                                                'libenchant1c2a',
-                                                'libgudev-1.0-0',
-                                                'libsecret-1-0',
-                                                'libhyphen0',
-                                                'libgdk-pixbuf2.0-0',
-                                                'libegl1',
-                                                'libgles2',
-                                                'libevent-2.1-6',
-                                                'libnotify4',
-                                                'libxslt1.1']);
-      // For video playback in Firefox
-      await exec('sudo', ['apt-get', 'install', 'ffmpeg']);
+      // await exec('apt-get', ['update']);
+      // // For Chromium
+      // await exec('sudo', ['apt-get', 'install', 'libgbm-dev']);
+      // // For WebKit
+      // await exec('sudo', ['apt-get', 'install', 'libwoff1',
+      //                                           'libopus0',
+      //                                           'libwebp6',
+      //                                           'libwebpdemux2',
+      //                                           'libenchant1c2a',
+      //                                           'libgudev-1.0-0',
+      //                                           'libsecret-1-0',
+      //                                           'libhyphen0',
+      //                                           'libgdk-pixbuf2.0-0',
+      //                                           'libegl1',
+      //                                           'libgles2',
+      //                                           'libevent-2.1-6',
+      //                                           'libnotify4',
+      //                                           'libxslt1.1']);
+      // // For video playback in Firefox
+      // await exec('sudo', ['apt-get', 'install', 'ffmpeg']);
     }
   } 
   catch (error) {
