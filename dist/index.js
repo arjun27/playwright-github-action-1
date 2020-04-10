@@ -951,7 +951,7 @@ const os = __webpack_require__(87);
 async function run() {
   try {
     if (os.platform() === 'linux') {
-      await exec('if ! command -v sudo >/dev/null; then echo "has_no_sudo" else echo "has_sudo" fi', {
+      await exec('if ! command -v sudo >/dev/null; then\necho "has_no_sudo" else\necho "has_sudo"\nfi', {
         listeners: {
           stdout: (data) => {
             console.log(data.toString());
