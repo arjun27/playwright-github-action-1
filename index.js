@@ -5,7 +5,7 @@ const os = require('os');
 async function run() {
   try {
     if (os.platform() === 'linux') {
-      await exec('if ! command -v sudo >/dev/null; then\necho "has_no_sudo" else\necho "has_sudo"\nfi', {
+      await exec('command', ['-v', 'sudo'], {
         listeners: {
           stdout: (data) => {
             console.log(data.toString());
